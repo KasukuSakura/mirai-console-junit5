@@ -53,6 +53,7 @@ test {
 
     doFirst {
         environment("JUNIT5_TESTING_CP", testClassesDirs.files.join(File.pathSeparator))
+        environment("JUNIT5_SELECTED_PLUGIN", "com.kasukusakura.mytest.testing")
         workingDir.mkdirs()
     }
 

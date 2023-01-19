@@ -29,7 +29,7 @@ jobs:
           cache-disabled: true
 
       - name: Build Project
-        run: gradle build --info
+        run: gradle build --info --full-stacktrace
 
       - name: Publish Modules
         run: gradle publish -x :agentstub:publish --info
