@@ -10,7 +10,7 @@
 
 ```groovy
 plugins {
-    id "com.kasukusakura.mirai-console-junit5" version "0.0.1"
+    id "com.kasukusakura.mirai-console-junit5" version "0.0.2"
 }
 ```
 
