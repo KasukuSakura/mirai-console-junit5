@@ -2,6 +2,16 @@
 
 由 mirai-console-junit5 启动的 mirai-console 示例运行在 `/build/mirai-console-junit` 中
 
+ 如果需要修改运行路径，请使用
+
+```kotlin
+afterEvaluate {
+    tasks.test {
+        println(workingDir)
+    }
+}
+```
+
 如果 `plugins` 存在其他插件, 需要使用
 
 ```groovy
