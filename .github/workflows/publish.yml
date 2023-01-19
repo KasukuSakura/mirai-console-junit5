@@ -32,7 +32,7 @@ jobs:
         run: gradle build --info --full-stacktrace
 
       - name: Publish Modules
-        run: gradle publish -x :agentstub:publish --info
+        run: gradle publish -x :agentmain:publish --info
 
       - name: Publish Gradle Plugins
         run: >
