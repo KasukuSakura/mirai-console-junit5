@@ -53,6 +53,7 @@ test {
 
     doFirst {
         environment("JUNIT5_TESTING_CP", testClassesDirs.files.join(File.pathSeparator))
+        workingDir.mkdirs()
     }
 
     // dependencies.createArtifactResolutionQuery().forModule("", "", "").execute()
