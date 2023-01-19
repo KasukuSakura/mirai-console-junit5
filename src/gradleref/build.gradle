@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'java-library'
+}
+
+compileJava {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    api fileTree(new File(gradle.gradleHomeDir, 'lib'))
+}
+
+repositories {
+    maven { url = new File("B:\\tlocal").toURI() }
+    mavenCentral()
+}
+
+dependencies {
+//    add('api', "com.kasukusakura.mirai-console-junit5:mirai-console-junit5:1.0-SNAPSHOT")
+//    add('api', "com.kasukusakura.mirai-console-junit5:mirai-console-junit5:1.0-SNAPSHOT:agentstub")
+}

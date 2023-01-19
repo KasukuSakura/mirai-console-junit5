@@ -1,0 +1,11 @@
+rootProject.name = 'mirai-console-junit5'
+
+def include1 = { name ->
+    include(':' + name)
+    project(':' + name).projectDir = new File(rootProject.projectDir, 'src/' + name)
+}
+
+include1('agentstub')
+include1('agentmain')
+include1('gradleref')
+include1('gradleplugin')

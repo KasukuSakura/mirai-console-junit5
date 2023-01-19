@@ -1,0 +1,49 @@
+plugins {
+    id 'io.github.karlatemp.publication-sign'
+    id 'java'
+    id 'java-gradle-plugin'
+    id 'com.gradle.plugin-publish' version '1.0.0'
+}
+
+description 'A gradle plugin for setup mirai-console junit5 testing'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly(gradleApi())
+    testImplementation(gradleApi())
+
+    compileOnly 'org.jetbrains:annotations:24.0.0'
+}
+
+compileJava {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+processResources {
+    from(file('src/main/extres')) {
+        expand([
+                'VERSION': project.version,
+        ])
+        into('com/kasukusakura/miraiconsolejunit5/gradle')
+    }
+}
+pluginBundle {
+    website = "https://github.com/KasukuSakura/mirai-console-junit5"
+    vcsUrl = "https://github.com/KasukuSakura/mirai-console-junit5"
+    tags = ["java", "test"]
+}
+
+gradlePlugin {
+    testSourceSets(sourceSets.test)
+    plugins {
+        create("miraiconsolejunit5") {
+            id = "com.kasukusakura.mirai-console-junit5"
+            displayName = "Mirai Console JUnit5"
+            description = project.description
+            implementationClass = "com.kasukusakura.miraiconsolejunit5.gradle.MiraiConsoleJUnit5"
+        }
+    }
+}

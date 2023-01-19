@@ -1,0 +1,94 @@
+plugins {
+    id 'java'
+    id 'java-library'
+
+    id 'io.github.karlatemp.publication-sign'
+    id 'maven-publish'
+}
+
+evaluationDependsOn(':agentstub')
+
+description 'Runtime for mirai-console-junit5'
+
+compileJava {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+configurations.register('testrun') { Configuration conf ->
+    conf.attributes.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.class, Usage.JAVA_RUNTIME))
+    conf.extendsFrom(configurations.getByName('compileClasspath'))
+}
+
+dependencies {
+    api 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    api 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+    api 'org.junit.platform:junit-platform-launcher:1.9.2'
+
+    api 'org.ow2.asm:asm:9.4'
+    api 'org.ow2.asm:asm-tree:9.4'
+
+    def compileAndTest = { dep ->
+        compileOnly dep
+        testImplementation dep
+    }
+
+    compileAndTest 'net.mamoe:mirai-core-mock:2.13.3'
+    compileAndTest 'net.mamoe:mirai-console:2.13.3'
+    compileAndTest 'net.mamoe:mirai-console-frontend-base:2.13.3'
+}
+
+configurations.all {
+    attributes {
+        attribute(Attribute.of("org.jetbrains.kotlin.platform.type", String.class), "jvm")
+    }
+}
+
+test {
+    dependsOn(':agentstub:jar')
+    useJUnitPlatform()
+
+    jvmArgs('-javaagent:' + project(':agentstub').file('build/libs/agentstub.jar').absolutePath)
+    classpath = configurations.testrun + sourceSets.main.runtimeClasspath
+    workingDir(new File(buildDir, 'junittest'))
+
+    doFirst {
+        environment("JUNIT5_TESTING_CP", testClassesDirs.files.join(File.pathSeparator))
+    }
+
+    // dependencies.createArtifactResolutionQuery().forModule("", "", "").execute()
+}
+
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set 'sources'
+    from sourceSets.main.allSource
+}
+
+
+publishing {
+    repositories {
+        if (System.getProperty('user.name') == 'Karlatemp') {
+            maven {
+                name = 'TLocal'
+                url = new File("B:/tlocal").toURI()
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = 'mirai-console-junit5'
+            version = project.version
+
+            from components.java
+            artifact project.rootProject.stubJavadoc
+            artifact sourcesJar
+            artifact project(':agentstub').tasks.getByName('jar')
+
+            pom { pom ->
+                pom.name = project.name
+                pom.description = project.description
+            }
+        }
+    }
+}

@@ -1,0 +1,22 @@
+
+plugins {
+    id 'java'
+    id 'java-library'
+}
+
+compileJava {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+jar {
+    manifest {
+        attributes([
+                'Premain-Class'          : 'com.kasukusakura.mirai.console.junit5.impl.JHookSupport',
+                'Can-Redefine-Classes'   : 'true',
+                'Can-Retransform-Classes': 'true',
+        ])
+    }
+
+    archiveFileName.set('agentstub.jar')
+    archiveClassifier.set('agentstub')
+}
