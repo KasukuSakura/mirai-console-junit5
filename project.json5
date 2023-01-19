@@ -1,0 +1,15 @@
+{
+  "scm": "https://github.com/KasukuSakura/mirai-console-junit5",
+  "license": {
+    "name": "GNU AGPLv3",
+    "url": "https://choosealicense.com/licenses/agpl-3.0/"
+  },
+  "devs": [
+    ///:: [ <ID>, <Name>, <E-Mail> ]
+    [
+      "KasukuSakura",
+      "KasukuSakura",
+      "support@kasukusakura.com"
+    ]
+  ]
+}
