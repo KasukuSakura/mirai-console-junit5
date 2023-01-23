@@ -202,11 +202,18 @@ public class JHookSupport {
             new ClassReader(classfileBuffer).accept(new ClassVisitor(Opcodes.ASM9, cw) {
                 @Override
                 public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-                    MethodVisitor sup = super.visitMethod(access, name, descriptor, signature, exceptions);
-                    if ((access & Opcodes.ACC_ABSTRACT) != 0) return sup;
 
-                    if (Type.getReturnType(descriptor) != Type.BOOLEAN_TYPE) return sup;
+                    topcheck:
+                    {
+                        vcheck:
+                        {
+                            if ((access & Opcodes.ACC_ABSTRACT) != 0) break vcheck; // goto super.visit
+                            if (Type.getReturnType(descriptor) != Type.BOOLEAN_TYPE) break vcheck;
 
+                            break topcheck; // goto return newMethodNode
+                        }
+                        return super.visitMethod(access, name, descriptor, signature, exceptions);
+                    }
 
                     return new MethodNode(Opcodes.ASM9, access, name, descriptor, signature, exceptions) {
                         private boolean hasJUnitTesting = false;
@@ -235,7 +242,7 @@ public class JHookSupport {
                                 tryCatchBlocks.clear();
                                 localVariables.clear();
 
-                                access ^= ~Opcodes.ACC_NATIVE;
+                                access &= ~Opcodes.ACC_NATIVE;
                                 visitInsn(Opcodes.ICONST_1);
                                 visitInsn(Opcodes.IRETURN);
                                 maxStack = 2;
@@ -247,7 +254,7 @@ public class JHookSupport {
                                 modified.set(true);
                             }
 
-                            accept(sup);
+                            accept(cw);
                         }
                     };
                 }
